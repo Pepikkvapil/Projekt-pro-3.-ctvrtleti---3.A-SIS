@@ -1,0 +1,45 @@
+<h2>Založit nového zaměstnance</h2>
+<form method="post">
+    <div class="form-group">
+        <label for="name">Jméno</label>
+        <input type="text" class="form-control" id="name" name="name" value="{{#employee}}{{employee.name}}{{/employee}}" required>
+        {{#errors.name}}<div class="d-block invalid-feedback">{{errors.name}}</div>{{/errors.name}}
+    </div>
+    <div class="form-group">
+        <label for="surname">Příjmení</label>
+        <input type="text" class="form-control" id="surname" name="surname" value="{{#employee}}{{employee.surname}}{{/employee}}">
+        {{#errors.surname}}<div class="d-block invalid-feedback">{{errors.surname}}</div>{{/errors.surname}}
+    </div>
+    <div class="form-group">
+        <label for="job">Práce</label>
+        <input type="text" class="form-control" id="job" name="job" value="{{#employee}}{{employee.job}}{{/employee}}" required>
+        {{#errors.job}}<div class="d-block invalid-feedback">{{errors.job}}</div>{{/errors.job}}
+    </div>
+    <div class="form-group">
+        <label for="wage">Mzda</label>
+        <input type="number" class="form-control" id="wage" name="wage" value="{{#employee}}{{employee.wage}}{{/employee}}" required>
+        {{#errors.wage}}<div class="d-block invalid-feedback">{{errors.wage}}</div>{{/errors.wage}}
+    </div>
+    <div class="form-group">
+        <label for="room">Místnost</label>
+        <select name="room" id="room" class="form-control">
+            {{#rooms}}
+                <option value="{{room_id}}">{{name}}</option>
+            {{/rooms}}
+        </select>
+        {{#errors.room}}<div class="d-block invalid-feedback">{{errors.room}}</div>{{/errors.room}}
+    </div>
+    <div class="form-group">
+        <label for="login">Přihlašovací jméno</label>
+        <input type="text" class="form-control" id="login" name="login" value="{{#employee}}{{employee.login}}{{/employee}}" required>
+        {{#errors.login}}<div class="d-block invalid-feedback">{{errors.login}}</div>{{/errors.login}}
+    </div>
+    <div class="form-group">
+        <label for="password">Heslo</label>
+        <input type="password" class="form-control" id="password" name="password" required>
+        {{#errors.password}}<div class="d-block invalid-feedback">{{errors.password}}</div>{{/errors.password}}
+    </div>
+    {{#employee.employee_id}}<input type="hidden" name="employee_id" value="{{employee.employee_id}}">{{/employee.employee_id}}
+
+    <button type="submit" class="btn btn-primary mt-3">Odeslat</button>
+</form>
