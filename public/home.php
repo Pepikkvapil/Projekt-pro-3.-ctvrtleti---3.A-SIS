@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . "/../bootstrap/bootstrap.php";
 
-class IndexPage extends BasePage
+class IndexPage extends CRUDPage
 {
     public function __construct()
     {

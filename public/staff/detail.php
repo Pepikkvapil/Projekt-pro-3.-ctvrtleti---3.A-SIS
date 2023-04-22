@@ -70,7 +70,7 @@ class Employee {
 
 require_once __DIR__ . "/../../bootstrap/bootstrap.php";
 
-class EmployeeDetailPage extends BasePage
+class EmployeeDetailPage extends CRUDPage
 {
     private $employee;
 

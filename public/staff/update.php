@@ -3,6 +3,8 @@ require_once __DIR__ . "/../../bootstrap/bootstrap.php";
 
 class StaffUpdatePage extends CRUDPage
 {
+
+
     private ?Staff $staff;
     private array $errors = [];
     private array $rooms = [];
@@ -10,7 +12,9 @@ class StaffUpdatePage extends CRUDPage
     {
         parent::prepare();
         $this->findState();
-        $this->title = "Upravit místnost";
+        $this->title = "Upravit zaměstnance";
+
+
 
         //když chce formulář
         if ($this->state === self::STATE_FORM_REQUESTED)
@@ -54,14 +58,21 @@ class StaffUpdatePage extends CRUDPage
 
     }
 
+
+
     protected function pageBody()
     {
+        $login_value = $this->staff->getLogin();
+
+
+
         return MustacheProvider::get()->render(
-            'employeeForm',
+            'employeeFormUpdate',
             [
                 'employee' => $this->staff,
                 'errors' => $this->errors,
-                'rooms' => $this->rooms
+                'rooms' => $this->rooms,
+                'login_value' => $login_value ?? ''
             ]
         );
     }

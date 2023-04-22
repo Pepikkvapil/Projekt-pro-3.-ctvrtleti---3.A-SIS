@@ -16,23 +16,29 @@ class ChangePassword extends CRUDPage
     protected function prepare(): void
     {
         parent::prepare();
-        if (!isset($_SESSION['id'])) {
-            header('Location: login.php');
-            exit;
-        }
+
         $this->findState();
 
-        //když poslal data
-        if($this->state === self::STATE_DATA_SENT) {
-            $currentPassword = filter_input(INPUT_POST, 'newPassword');
-            $result = Staff::updatePassword($_SESSION['id'], $currentPassword);
-            if($result === true){
-                header('Location: ../home.php');
-            }else{
-                $this->errors = $result;
+        // When data is submitted
+        if ($this->state === self::STATE_DATA_SENT) {
+            $newPassword = filter_input(INPUT_POST, 'newPassword');
+            $confirmPassword = filter_input(INPUT_POST, 'confirmPassword');
+
+            if ($newPassword !== $confirmPassword) {
+                $this->errors[] = 'Hesla se neshodují.';
+            } else {
+                $result = Staff::updatePassword($_SESSION['id'], $newPassword);
+
+                if ($result === true) {
+                    header('Location: ../home.php');
+                    exit;
+                } else {
+                    $this->errors = $result;
+                }
             }
         }
     }
+
 
     protected function pageBody(): mixed
     {

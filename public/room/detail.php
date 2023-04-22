@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . "/../../bootstrap/bootstrap.php";
 
-class RoomDetailPage extends BasePage
+class RoomDetailPage extends CRUDPage
 {
     private $room;
     private $employees;

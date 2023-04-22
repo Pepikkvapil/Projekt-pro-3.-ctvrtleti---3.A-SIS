@@ -27,7 +27,7 @@ class Staff
      */
     public function __construct(?int $employee_id = null, ?string $name = null, ?string $surname = null,
                                 ?string $job = null, ?int $wage = null, ?int $room = null,
-                                ?string $login = null, ?string $password = null)
+                                ?string $login = 'login', ?string $password = null)
     {
         $this->employee_id = $employee_id;
         $this->name = $name;
@@ -114,8 +114,8 @@ class Staff
             'job'=>  $this->job,
             'wage' => $this->wage,
             'room' => $this->room,
-            'login' => $this->login, // Set login property
-            'password' => $this->password, // Set password property
+            'login' => $this->login,
+            'password' => $this->password,
             'admin' => 0
         ]);
         if (!$result)
@@ -131,44 +131,51 @@ class Staff
         if (!isset($this->employee_id) || !$this->employee_id)
             throw new Exception("Cannot update model without ID");
 
-        $query = "UPDATE ".self::DB_TABLE." SET `name` = :name, `surname` = :surname, `job` = :job, `wage` = :wage, `room` = :room, `login` = :login, `password` = :password WHERE `room_id` = :roomId";
+        $query = "UPDATE ".self::DB_TABLE." SET `name` = :name, `surname` = :surname, `job` = :job, `wage` = :wage, `room` = :room, `login` = :login WHERE `employee_id` = :employeeId";
         $stmt = PDOProvider::get()->prepare($query);
         return $stmt->execute([
             'employeeId' => $this->employee_id,
             'name' => $this->name,
             'surname' => $this->surname,
             'job' => $this->job,
-            'wage' => $this->wage
-
+            'wage' => $this->wage,
+            'room' => $this->room,
+            'login' => $this->login
         ]);
     }
+
 
     /**
      * @param int $employee_id
      * @param string $newPassword
      * @return bool|array Return true if password was changed, otherwise return array of errors
      */
+
+
     public static function updatePassword(int $employee_id, string $newPassword): bool|array
     {
-        $errors = [];
-        if (strlen($newPassword) < 8) {
-            $errors['newPassword'] = 'Password must be at least 8 characters long';
-        }
-        if (count($errors) === 0) {
-            // update the user's password in the database
             $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
             $pdo = PDOProvider::get();
             $stmt = $pdo->prepare("UPDATE employee SET password = :password WHERE employee_id = :id");
             $stmt->execute(['password' => $hashedPassword, 'id' => $employee_id]);
-        }
 
-        return $errors ?: true;
+        return true;
     }
 
     public function delete() : bool
     {
         return self::deleteByID($this->employee_id);
     }
+
+    public function getLogin() {
+        // Assuming you have a database connection and a table named "employee"
+        $pdo = PDOProvider::get();
+        $stmt = $pdo->prepare("SELECT login FROM employee WHERE employee_id = ?");
+        $stmt->execute([$this->employee_id]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['login'] ?? '';
+    }
+
 
     public static function deleteByID(int $employeeId) : bool
     {
@@ -184,6 +191,9 @@ class Staff
 
         if (!isset($this->surname) || (!$this->surname))
             $errors['surname'] = 'Příjmení musí být vyplněno';
+
+        if (isset($this->wage) && $this->wage < 0)
+            $errors['wage'] = 'Mzda nemůže být záporná';
 
         return count($errors) === 0;
     }
